@@ -1,5 +1,4 @@
 from game import Game
-from exceptions import RatingError
 
 def test_title():
     game = Game()
@@ -43,15 +42,29 @@ def test_rating():
     assert game.rating == None
     try:
         game.rating = 6
-    except RatingError:
+    except ValueError:
         pass
     assert game.rating == None
     try:
         game.rating = 0
-    except RatingError:
+    except ValueError:
         assert game.rating == None
     try:
         game.rating = 1
-    except RatingError:
+    except ValueError:
         pass
     assert game.rating == 1
+
+def test_str():
+    game = Game()
+    game.title = "Test Title"
+    game.developer = "Test Developer"
+    game.genre = "Test Genre"
+    game.platform = "Test Platform"
+    game.release = "Test Release"
+    game.complete = "Test Complete"
+    game.rating = 4
+    print(game)
+
+if __name__ == "__main__":
+    test_str()
