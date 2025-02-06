@@ -1,13 +1,15 @@
+from validator_collection import validators,errors
+
 class Game:
 
     def __init__(self):
-        self._title:str = None
-        self._developer:str = None
-        self._genre:str = None
-        self._platform:str = None
-        self._release:str = None
-        self._complete:str = None
-        self._rating:int = None
+        self._title:str = ""
+        self._developer:str = ""
+        self._genre:str = ""
+        self._platform:str = ""
+        self._release:str = ""
+        self._complete:str = ""
+        self._rating:int = 0
 
 
     @property
@@ -16,7 +18,10 @@ class Game:
     
     @title.setter
     def title(self, text:str):
-        self._title = text
+        if text == "":
+            raise ValueError("Title cannot be blank")
+        else:
+            self._title = text
     
     @property
     def developer(self)->str:
@@ -24,7 +29,10 @@ class Game:
     
     @developer.setter
     def developer(self, text:str):
-        self._developer = text
+        if text == "":
+            raise ValueError("Developer cannot be blank")
+        else:
+            self._developer = text
     
     @property
     def release(self)->str:
@@ -32,7 +40,15 @@ class Game:
     
     @release.setter
     def release(self, text:str):   
-        self._release = text
+        if text == "":
+            raise ValueError("Release Date cannot be blank")
+        else:
+            try:
+                validators.date(text)
+            except errors.CannotCoerceError:
+                raise ValueError("Invalid date")
+            else:
+                self._release = text
     
     @property
     def complete(self)->str:
@@ -40,7 +56,15 @@ class Game:
     
     @complete.setter
     def complete(self, text:str):
-        self._complete = text
+        if text == "":
+            raise ValueError("Completion Date cannot be blank")
+        else:
+            try:
+                validators.date(text)
+            except errors.CannotCoerceError:
+                raise ValueError("Invalid date")
+            else:
+                self._complete = text
     
     @property
     def genre(self)->str:
@@ -48,7 +72,10 @@ class Game:
     
     @genre.setter
     def genre(self, text:str):
-        self._genre = text
+        if text == "":
+            raise ValueError("Genre cannot be blank")
+        else:
+            self._genre = text
     
     @property
     def platform(self)->str:
@@ -56,18 +83,29 @@ class Game:
     
     @platform.setter
     def platform(self, text:str):
-        self._platform = text
+        if text == "":
+            raise ValueError("Platform cannot be blank")
+        else:
+            self._platform = text
 
     @property
     def rating(self)->int:
         return self._rating
     
     @rating.setter
-    def rating(self, number:int):
-        if number < 1 or number > 5:
-            raise ValueError("Rating outside accepted range")
+    def rating(self, text:str):
+        if text == "":
+            raise ValueError("Rating cannot be blank")
         else:
-            self._rating = number
+            try:
+                num = int(text)
+            except ValueError:
+                raise ValueError("Rating must be a number")
+            else:
+                if num < 1 or num > 5:
+                    raise ValueError("Rating outside accepted range")
+                else:
+                    self._rating = num
 
     def __str__(self)->str:
         return f"Title: {self._title}\nDeveloper: {self._developer}\nGenre: {self._genre}\nPlatform: {self._platform}\nRelease Date: {self._release}\nCompletion Date: {self._complete}\nRating: {self._rating}/5"
