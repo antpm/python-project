@@ -1,4 +1,5 @@
 from validator_collection import validators,errors
+from tabulate import tabulate
 
 class Game:
 
@@ -109,3 +110,7 @@ class Game:
 
     def __str__(self)->str:
         return f"Title: {self._title}\nDeveloper: {self._developer}\nGenre: {self._genre}\nPlatform: {self._platform}\nRelease Date: {self._release}\nCompletion Date: {self._complete}\nRating: {self._rating}/5"
+
+    def list_data(self, num:int)->list:
+        data = [num, self._title,self._developer,self._genre,self._platform,self._release,self._complete,f"{self._rating}/5"]
+        return data

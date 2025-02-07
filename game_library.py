@@ -1,6 +1,7 @@
 from lib.game import Game
 import sys
 import argparse
+from tabulate import tabulate
 
 def main():
     parser = argparse.ArgumentParser(prog="Game Library", description="A program for creating a library of games you've played")
@@ -47,9 +48,11 @@ def show_menu():
     print("(6)Exit")
 
 def view_games(games:list[Game]):
+    headers= ["#","Title","Developer","Genre","Platform","Release Date","Completion Date","Rating"]
+    data= []
     for i,game in enumerate(games):
-        print(f"\nGame #{i+1}")
-        print(game)
+        data.append(game.list_data(i+1))
+    print(tabulate(data, headers=headers, tablefmt="grid"))
 
 def add_game(games:list[Game])->list[Game]:
     new_game = Game()
@@ -112,7 +115,7 @@ def add_game(games:list[Game])->list[Game]:
 
     games.append(new_game)
 
-    return games
+    return sorted(games, key=lambda game:game.complete, reverse=True)
 
 def edit_game(games:list[Game])->list[Game]:
     pass
