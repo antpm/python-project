@@ -111,6 +111,12 @@ class Game:
     def __str__(self)->str:
         return f"Title: {self._title}\nDeveloper: {self._developer}\nGenre: {self._genre}\nPlatform: {self._platform}\nRelease Date: {self._release}\nCompletion Date: {self._complete}\nRating: {self._rating}/5"
 
-    def list_data(self, num:int)->list:
-        data = [num, self._title,self._developer,self._genre,self._platform,self._release,self._complete,f"{self._rating}/5"]
-        return data
+    def full_list_data(self, num:int)->list:
+        return [num, self._title,self._developer,self._genre,self._platform,self._release,self._complete,f"{self._rating}/5"]
+        
+    
+    def short_list_data(self, num:int)->list:
+        return [num, self._title]
+    
+    def dict_convert(self)->dict:
+        return {"title":self._title, "developer":self._developer, "genre":self._genre,"platform":self._platform,"release date":self._release, "complete date":self._complete,"rating":self._rating}

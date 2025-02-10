@@ -2,3 +2,4 @@ __pycache__/
 .pytest_cache/
 Outline.txt
 .vscode/settings.json
+saved_data/
