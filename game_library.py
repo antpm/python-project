@@ -16,7 +16,7 @@ def main():
         print(f"{args.load} loaded")
         new = False
         file_name = args.load
-        games = load_data()
+        games = load_data(file_name)
     else:
         print("New catalog started")
 
@@ -175,9 +175,18 @@ def get_new_file_name()->str:
 
     return file_name.strip()
     
-def load_data()->list[Game]:
-    pass
+def load_data(file_name:str)->list[Game]:
+    
     games = list()
+    try:
+        with open(f"saved_data/{file_name}.csv", "r") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                game = Game(row["title"],row["developer"],row["genre"],row["platform"],row["release date"],row["complete date"],int(row["rating"]))
+                games.append(game)
+    except FileNotFoundError:
+        sys.exit("File to load could not be found. Program will now close...")
+    
     return games
 
 if __name__ == "__main__":

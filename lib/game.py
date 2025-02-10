@@ -3,14 +3,14 @@ from tabulate import tabulate
 
 class Game:
 
-    def __init__(self):
-        self._title:str = ""
-        self._developer:str = ""
-        self._genre:str = ""
-        self._platform:str = ""
-        self._release:str = ""
-        self._complete:str = ""
-        self._rating:int = 0
+    def __init__(self,title="", developer="",genre="",platform="",release="",complete="",rating=0):
+        self._title:str = title
+        self._developer:str = developer
+        self._genre:str = genre
+        self._platform:str = platform
+        self._release:str = release
+        self._complete:str = complete
+        self._rating:int = rating
 
 
     @property
