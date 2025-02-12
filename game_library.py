@@ -2,7 +2,6 @@ from lib.game import Game
 import sys
 import argparse
 import csv
-import os.path
 from tabulate import tabulate
 
 def main():
@@ -12,6 +11,7 @@ def main():
     games = list()
     new = True
     file_name = ""
+    options = [["(1)", "View Games"],["(2)", "Add Game"],["(3)", "Edit Game"],  ["(4)", "Delete Game"], ["(5)", "Sort Games"], ["(6)", "Save Data"], ["(7)","Exit"]]
 
     if args.load:
         print(f"{args.load} loaded")
@@ -22,13 +22,13 @@ def main():
         print("New catalog started")
 
     while True:
-        show_menu()
+        print(tabulate(options))
         try:
             select = int(input("Enter the number of the option you wish to select: "))
         except ValueError:
             print("\nInvalid selection")
         else:
-            if select > 6 or select < 1:
+            if select > len(options) or select < 1:
                 print("\nInvalid selection")
             else:
                 match select:
@@ -41,14 +41,12 @@ def main():
                     case 4:
                         games = delete_game(games)
                     case 5:
-                        save_date(games, new, file_name)
+                        games = sort_games(games)
                     case 6:
+                        save_date(games, new, file_name)
+                    case 7:
                         sys.exit("Goodbye")
 
-
-def show_menu():
-    options = [["(1)", "View Games"],["(2)", "Add Game"],["(3)", "Edit Game"],  ["(4)", "Delete Game"], ["(5)", "Save Data"], ["(6)", "Exit"]]
-    print(tabulate(options))
 
 def show_full_table(games:list[Game]):
     headers= ["#","Title","Developer","Genre","Platform","Release Date","Completion Date","Rating"]
@@ -128,7 +126,7 @@ def add_game(games:list[Game])->list[Game]:
 
     games.append(new_game)
 
-    return sorted(games, key=lambda game: game.complete, reverse=True)
+    return games
 
 def select_game(games:list[Game], mode:str)->int:
     show_short_table(games)
@@ -143,25 +141,29 @@ def select_game(games:list[Game], mode:str)->int:
                 print("Invalid selection. Please try again")
             else:
                 return game_num
-
-def edit_game(games:list[Game])->list[Game]:
-
+            
+def select_field(msg:str)->int:
     fields = [["(1)", "Title"],["(2)", "Developer"],["(3)", "Genre"],["(4)", "Platform"],["(5)", "Release Date"],["(6)", "Complete Date"],["(7)", "Rating"]]
     field_num = 0
 
-    game_num = select_game(games, "edit")
-    game = games[game_num -1]
     while True:
         print(tabulate(fields))
         try:
-            field_num = int(input("Enter the number of the field you wish to change: "))
+            field_num = int(input(msg))
         except ValueError:
             print("Invalid selection. Please try again.")
         else:
             if field_num < 1 or field_num > len(fields):
-                print("Invalid selection. Please try again.")
+                print("\nInvalid selection. Please try again.")
             else:
-                break
+                return field_num
+
+def edit_game(games:list[Game])->list[Game]:
+
+    game_num = select_game(games, "edit")
+    game = games[game_num -1]
+    
+    field_num = select_field("Enter the number of the field to edit: ")
 
     match field_num:
         case 1:
@@ -223,7 +225,7 @@ def edit_game(games:list[Game])->list[Game]:
         
     print("\nGame Edited. Returning to main menu...\n")
 
-    return sorted(games, key=lambda game: game.complete, reverse=True)
+    return games
     
 def delete_game(games:list[Game])->list[Game]:
     game_num = select_game(games, "delete")
@@ -242,7 +244,30 @@ def delete_game(games:list[Game])->list[Game]:
     
     print("Returning to main menu...")
 
-    return sorted(games, key=lambda game: game.complete, reverse=True)
+    return games
+
+def sort_games(games:list[Game])->list[Game]:
+    
+    field_num = select_field("Enter the number of field to sort by: ")
+
+    match field_num:
+        case 1:
+            games = sorted(games, key=lambda game: game.title, reverse=True)
+        case 2:
+            games = sorted(games, key=lambda game: game.developer, reverse=True)
+        case 3:
+            games = sorted(games, key=lambda game: game.genre, reverse=True)
+        case 4:
+            games = sorted(games, key=lambda game: game.platform, reverse=True)
+        case 5:
+            games = sorted(games, key=lambda game: game.release, reverse=True)
+        case 6:
+            games = sorted(games, key=lambda game: game.complete, reverse=True)
+        case 7:
+            games = sorted(games, key=lambda game: game.rating, reverse=True)
+
+    print("\nGames sorted. Returning to main menu...\n")
+    return games
 
 def save_date(games:list[Game], new:bool, file_name:str):
     if new:
