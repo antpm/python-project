@@ -12,6 +12,7 @@ def main():
     games = list()
     new = True
     file_name = ""
+
     if args.load:
         print(f"{args.load} loaded")
         new = False
@@ -129,25 +130,27 @@ def add_game(games:list[Game])->list[Game]:
 
     return sorted(games, key=lambda game: game.complete, reverse=True)
 
-def edit_game(games:list[Game])->list[Game]:
-
-    fields = [["(1)", "Title"],["(2)", "Developer"],["(3)", "Genre"],["(4)", "Platform"],["(5)", "Release Date"],["(6)", "Complete Date"],["(7)", "Rating"]]
-    game_num = 0
-    field_num = 0
-
+def select_game(games:list[Game], mode:str)->int:
     show_short_table(games)
 
     while True:
         try:
-            game_num = int(input("Enter the number of the game you wish to edit: "))
+            game_num = int(input(f"Enter the number of the game to {mode}: "))
         except ValueError:
             print("Invalid selection. Please try again")
         else:
             if game_num < 1 or game_num > len(games):
                 print("Invalid selection. Please try again")
             else:
-                break
+                return game_num
 
+def edit_game(games:list[Game])->list[Game]:
+
+    fields = [["(1)", "Title"],["(2)", "Developer"],["(3)", "Genre"],["(4)", "Platform"],["(5)", "Release Date"],["(6)", "Complete Date"],["(7)", "Rating"]]
+    field_num = 0
+
+    game_num = select_game(games, "edit")
+    game = games[game_num -1]
     while True:
         print(tabulate(fields))
         try:
@@ -159,8 +162,6 @@ def edit_game(games:list[Game])->list[Game]:
                 print("Invalid selection. Please try again.")
             else:
                 break
-
-    game = games[game_num -1]
 
     match field_num:
         case 1:
@@ -224,9 +225,23 @@ def edit_game(games:list[Game])->list[Game]:
 
     return sorted(games, key=lambda game: game.complete, reverse=True)
     
-
 def delete_game(games:list[Game])->list[Game]:
-    pass
+    game_num = select_game(games, "delete")
+    game = games[game_num -1]
+    while True:
+        confirm = input(f"\nDeleting {game.title}. Are you sure? Y/N: ").lower()
+        if confirm == "y":
+            games.remove(game)
+            print("\nGame deleted.", end=" ")
+            break
+        elif confirm == "n":
+            print("\nCanceling deletion.", end=" ")
+            break
+        else:
+            print("Invalid input, please try again.")
+    
+    print("Returning to main menu...")
+
     return sorted(games, key=lambda game: game.complete, reverse=True)
 
 def save_date(games:list[Game], new:bool, file_name:str):
