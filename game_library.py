@@ -57,10 +57,13 @@ def show_full_table(games:list[Game]):
     print(tabulate(data, headers=headers, tablefmt="grid"))
 
 def show_short_table(games:list[Game]):
+
     headers= ["#","Title"]
     data = []
+
     for i, game in enumerate(games):
         data.append(game.short_list_data(i+1))
+
     print(tabulate(data, headers=headers, tablefmt="grid"))
 
 def add_game(games:list[Game])->list[Game]:
@@ -127,17 +130,98 @@ def add_game(games:list[Game])->list[Game]:
     return sorted(games, key=lambda game: game.complete, reverse=True)
 
 def edit_game(games:list[Game])->list[Game]:
-    """ show_short_table(games)
+
+    fields = [["(1)", "Title"],["(2)", "Developer"],["(3)", "Genre"],["(4)", "Platform"],["(5)", "Release Date"],["(6)", "Complete Date"],["(7)", "Rating"]]
+    game_num = 0
+    field_num = 0
+
+    show_short_table(games)
+
     while True:
         try:
-            select = int(input("Enter the number of the game you wish to edit: "))
+            game_num = int(input("Enter the number of the game you wish to edit: "))
         except ValueError:
             print("Invalid selection. Please try again")
         else:
-            if select < 1 or select > len(games):
+            if game_num < 1 or game_num > len(games):
                 print("Invalid selection. Please try again")
             else:
-                break """
+                break
+
+    while True:
+        print(tabulate(fields))
+        try:
+            field_num = int(input("Enter the number of the field you wish to change: "))
+        except ValueError:
+            print("Invalid selection. Please try again.")
+        else:
+            if field_num < 1 or field_num > len(fields):
+                print("Invalid selection. Please try again.")
+            else:
+                break
+
+    game = games[game_num -1]
+
+    match field_num:
+        case 1:
+             while True:
+                try:
+                    game.title = input("Enter New Title: ")
+                except ValueError as e:
+                    print(e)
+                else:
+                    break
+        case 2:
+            while True:
+                try:
+                    game.developer = input("Enter New Developer: ")
+                except ValueError as e:
+                    print(e)
+                else:
+                    break
+        case 3:
+            while True:
+                try:
+                    game.genre = input("Enter New Genre: ")
+                except ValueError as e:
+                    print(e)
+                else:
+                    break
+        case 4:
+            while True:
+                try:
+                    game.platform = input("Enter New Platform: ")
+                except ValueError as e:
+                    print(e)
+                else:
+                    break
+        case 5:
+            while True:
+                try:
+                    game.release = input("Enter New Release Date: ")
+                except ValueError as e:
+                    print(e)
+                else:
+                    break
+        case 6:
+            while True:
+                try:
+                    game.complete = input("Enter New Completion Date: ")
+                except ValueError as e:
+                    print(e)
+                else:
+                    break
+        case 7:
+            while True:
+                try:
+                    game.rating = input("Enter New Rating(1-5): ")
+                except ValueError as e:
+                    print(e)
+                else:
+                    break
+        
+    print("\nGame Edited. Returning to main menu...\n")
+
     return sorted(games, key=lambda game: game.complete, reverse=True)
     
 
