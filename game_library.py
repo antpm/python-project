@@ -14,12 +14,12 @@ def main():
     options = [["(1)", "View Games"],["(2)", "Add Game"],["(3)", "Edit Game"],  ["(4)", "Delete Game"], ["(5)", "Sort Games"], ["(6)", "Save Data"], ["(7)","Exit"]]
 
     if args.load:
-        print(f"{args.load} loaded")
+        print(f"--Data loaded from {args.load}.csv")
         new = False
         file_name = args.load
         games = load_data(file_name)
     else:
-        print("New catalog started")
+        print("--New file started--")
 
     while True:
         print(tabulate(options))
@@ -43,7 +43,8 @@ def main():
                     case 5:
                         games = sort_games(games)
                     case 6:
-                        save_date(games, new, file_name)
+                        file_name = save_date(games, new, file_name)
+                        new = False
                     case 7:
                         sys.exit("Goodbye")
 
@@ -269,7 +270,7 @@ def sort_games(games:list[Game])->list[Game]:
     print("\nGames sorted. Returning to main menu...\n")
     return games
 
-def save_date(games:list[Game], new:bool, file_name:str):
+def save_date(games:list[Game], new:bool, file_name:str)->str:
     if new:
         file_name = get_new_file_name()
 
@@ -285,6 +286,7 @@ def save_date(games:list[Game], new:bool, file_name:str):
             writer.writerow(item)
         
     print("\nData Saved\n")
+    return file_name
     
 def get_new_file_name()->str:
     while True:
